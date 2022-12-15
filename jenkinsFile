@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+
+    environment {
+        PATH = "C:\WINDOWS\SYSTEM32;C:\Users\Armand\AppData\Local\Programs\Python\Python311;C:\Program Files\Docker\Docker\resources\bin"
+    }
+
+    stages {
+        stage('Building') {
+            steps {
+                git url: 'https://github.com/ArmandoLPollo/First_Jenkins_pipeline'
+            }
+        }
+        stage('Testing') {
+            steps {
+                bat 'python -m pip install Flask'
+                bat 'python test_main.py'
+            }
+        }
+        stage('Deploying') {
+            steps {
+                // build a Docker image
+                bat 'docker build -t sampple-flask-app .'
+                // run a Docker container from the image
+                bat 'docker run sample-flask-app'
+            }
+        }
+    }
+}
